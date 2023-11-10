@@ -2,6 +2,8 @@
 import express, { Express } from "express";
 import cors from "cors";
 import * as dotenv from "dotenv";
+import cookieParser from "cookie-parser";
+import usersController from "./controllers/usersController";
 
 dotenv.config();
 
@@ -16,6 +18,9 @@ const app: Express = express();
 
 app.use(cors());
 app.use(express.json());
+app.use(cookieParser());
+
+app.use("/users", usersController);
 
 app.listen(PORT, () => {
   console.log(`Listening on port ${PORT}`);
