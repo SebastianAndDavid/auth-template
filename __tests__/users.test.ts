@@ -2,7 +2,7 @@ import request from 'supertest';
 import app from '../src/app';
 // import { createUser } from '../src/types/users.create';
 
-// const mockUser = { email: 'testing17@test.com', password: 'test' };
+const mockUser = { email: 'testing@test.com', password: 'test' };
 
 // async function registerAndLogin(
 //   mockUser: createUser,
@@ -21,10 +21,13 @@ describe('backend author routes', () => {
 
   it('#GET/#id returns a user', async () => {
     // const user = await registerAndLogin(mockUser, agent);
-    // console.log('user', user.id);
     const res = await agent.get('/users/18');
-    // console.log('res', res);
-    console.log('res.body', res.body);
+    expect(res.status).toBe(200);
+  });
+  it.only('logs in a user', async () => {
+    // await request(app).post('/users').send(mockUser);
+    const res = await agent.post('/users/sessions').send(mockUser);
+    console.log('res.body', res);
     expect(res.status).toBe(200);
   });
 });
