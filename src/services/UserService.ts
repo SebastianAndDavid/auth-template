@@ -45,6 +45,6 @@ export default class UserService {
       process.env.JWT_secret || '',
       { expiresIn: '1 day' },
     );
-    return token;
+    return [user, token];
   }
 }
