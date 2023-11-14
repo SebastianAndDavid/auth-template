@@ -24,7 +24,7 @@ export default class UserService {
 
     const tokenPayLoad = { id: user.id, email: user.email };
 
-    const token = sign(tokenPayLoad, JWT_SECRET || 'defaultSecret', {
+    const token = sign(tokenPayLoad, JWT_SECRET || '', {
       expiresIn: '1 day',
     });
     return [user, token];
@@ -42,7 +42,7 @@ export default class UserService {
     }
     const token = sign(
       { id: user?.id, email: user?.email },
-      process.env.JWT_secret || 'defaultSecret',
+      process.env.JWT_secret || '',
       { expiresIn: '1 day' },
     );
     return token;
