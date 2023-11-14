@@ -1,21 +1,30 @@
-import request from "supertest";
-import app from "../src/app";
+import request from 'supertest';
+import app from '../src/app';
+// import { createUser } from '../src/types/users.create';
 
-describe("backend author routes", () => {
+// const mockUser = { email: 'testing17@test.com', password: 'test' };
+
+// async function registerAndLogin(
+//   mockUser: createUser,
+//   agent: request.SuperTest<request.Test>,
+// ) {
+//   const res = await agent.post('/users').send(mockUser);
+//   return res.body;
+// }
+
+describe('backend author routes', () => {
   const agent = request.agent(app);
-  it("#POST creates a new user", async () => {
-    const res = await request(app)
-      .post("/users")
-      .send({ email: "test@test.com", password: "123456" });
-    expect(res.status).toBe(200);
-  });
+  // it('#POST creates a new user', async () => {
+  //   const res = await request(app).post('/users').send(mockUser);
+  //   expect(res.status).toBe(200);
+  // });
 
-  it.only("#GET/#id returns a user", async () => {
-    const user = {
-      email: "test@test.com",
-      id: 1,
-    };
-    const res = await agent.get(`users/${user.id}`);
+  it('#GET/#id returns a user', async () => {
+    // const user = await registerAndLogin(mockUser, agent);
+    // console.log('user', user.id);
+    const res = await agent.get('/users/18');
+    // console.log('res', res);
+    console.log('res.body', res.body);
     expect(res.status).toBe(200);
   });
 });

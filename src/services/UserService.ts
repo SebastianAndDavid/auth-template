@@ -1,4 +1,4 @@
-import { hash } from 'bcrypt';
+import { compareSync, hash } from 'bcrypt';
 import { prisma } from '../utils/db.server';
 import { sign } from 'jsonwebtoken';
 import { JWT_SECRET } from '../config';
@@ -28,5 +28,23 @@ export default class UserService {
       expiresIn: '1 day',
     });
     return [user, token];
+  }
+
+  static async signInUser({ email, password }: User) {
+    const user = await prisma.users.findUnique({
+      where: {
+        email,
+      },
+    });
+    if (!user) throw createHttpError(404, 'User not found');
+    if (!compareSync(password, user.password)) {
+      throw createHttpError(401, 'Invalid password or username');
+    }
+    const token = sign(
+      { id: user?.id, email: user?.email },
+      process.env.JWT_secret || 'defaultSecret',
+      { expiresIn: '1 day' },
+    );
+    return token;
   }
 }
