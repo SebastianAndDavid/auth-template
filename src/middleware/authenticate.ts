@@ -12,10 +12,10 @@ declare module 'express' {
 
 export default (req: Request, res: Response, next?: NextFunction) => {
   try {
-    const cookie = req.cookies && req.cookies[COOKIE_NAME || 'defaultCookie'];
+    const cookie = req.cookies && req.cookies[COOKIE_NAME];
     if (!cookie) createHttpError(404, 'Must be signed in to continue');
 
-    const user = verify(cookie, JWT_SECRET || 'defaultSecret') as UserSelect;
+    const user = verify(cookie, JWT_SECRET) as UserSelect;
 
     if (user) {
       req.user = user;

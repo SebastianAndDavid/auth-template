@@ -24,7 +24,7 @@ export default class UserService {
 
     const tokenPayLoad = { id: user.id, email: user.email };
 
-    const token = sign(tokenPayLoad, JWT_SECRET || '', {
+    const token = sign(tokenPayLoad, JWT_SECRET, {
       expiresIn: '1 day',
     });
     return [user, token];
@@ -40,11 +40,9 @@ export default class UserService {
     if (!compareSync(password, user.password)) {
       throw createHttpError(401, 'Invalid password or username');
     }
-    const token = sign(
-      { id: user?.id, email: user?.email },
-      process.env.JWT_secret || '',
-      { expiresIn: '1 day' },
-    );
+    const token = sign({ id: user?.id, email: user?.email }, JWT_SECRET, {
+      expiresIn: '1 day',
+    });
     return [user, token];
   }
 }

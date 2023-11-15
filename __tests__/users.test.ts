@@ -2,7 +2,7 @@ import request from 'supertest';
 import app from '../src/app';
 import { createUser } from '../src/types/users.create';
 
-const mockUser = { email: 'testi@test.com', password: 'test' };
+const mockUser = { email: 'test6@test.com', password: 'test' };
 
 async function registerAndLogin(
   mockUser: createUser,
@@ -30,10 +30,10 @@ describe('backend author routes', () => {
     expect(res.status).toBe(200);
   });
   it.only('#DELETE/users/sessions deletes a user session (logs user out)', async () => {
-    const user = await registerAndLogin(mockUser, agent);
+    await registerAndLogin(mockUser, agent);
     const logout = await agent.delete('/users/sessions');
     expect(logout.status).toBe(200);
-    const res = await agent.get(`/users/${user.id}`);
+    const res = await agent.get('/users/52');
     expect(res.status).toBe(401);
   });
 });
