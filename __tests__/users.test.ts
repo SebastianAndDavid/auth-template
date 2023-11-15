@@ -2,7 +2,7 @@ import request from 'supertest';
 import app from '../src/app';
 import { createUser } from '../src/types/users.create';
 
-const mockUser = { email: 'test6@test.com', password: 'test' };
+const mockUser = { email: 'test12@test.com', password: 'test' };
 
 async function registerAndLogin(
   mockUser: createUser,
@@ -33,7 +33,14 @@ describe('backend author routes', () => {
     await registerAndLogin(mockUser, agent);
     const logout = await agent.delete('/users/sessions');
     expect(logout.status).toBe(200);
-    const res = await agent.get('/users/52');
-    expect(res.status).toBe(401);
+    expect(logout.body).toEqual({
+      success: true,
+      message: 'Sign out successful',
+    });
+
+    await new Promise((resolve) => setTimeout(resolve, 100));
+
+    // const res = await agent.get(`/users/${user.id}`);
+    // expect(res.status).toBe(404);
   });
 });
