@@ -52,15 +52,16 @@ export default Router()
     async (req: Request, res: Response, next: NextFunction) => {
       try {
         const [user, token] = await UserService.signInUser(req.body);
-
-        res
-          .cookie(COOKIE_NAME, token, {
-            httpOnly: true,
-            maxAge: ONE_DAY_IN_MS,
-            sameSite: 'none',
-            secure: process.env.NODE_ENV === 'production',
-          })
-          .json(user);
+        if (user) {
+          res
+            .cookie(COOKIE_NAME, token, {
+              httpOnly: true,
+              maxAge: ONE_DAY_IN_MS,
+              sameSite: 'none',
+              secure: process.env.NODE_ENV === 'production',
+            })
+            .json(user);
+        }
       } catch (error) {
         next(error);
       }
@@ -74,7 +75,10 @@ export default Router()
     async (req: Request, res: Response, next: NextFunction) => {
       try {
         res
-          .clearCookie(COOKIE_NAME)
+          .clearCookie(COOKIE_NAME, {
+            httpOnly: true,
+            sameSite: 'none',
+          })
           .json({ success: true, message: 'Sign out successful' });
       } catch (error) {
         next(error);

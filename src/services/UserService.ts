@@ -40,7 +40,7 @@ export default class UserService {
     if (!compareSync(password, user.password)) {
       throw createHttpError(401, 'Invalid password or username');
     }
-    const token = sign({ id: user?.id, email: user?.email }, JWT_SECRET, {
+    const token = sign({ id: user.id, email: user.email }, JWT_SECRET, {
       expiresIn: '1 day',
     });
     return [user, token];
