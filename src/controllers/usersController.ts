@@ -18,7 +18,7 @@ export default Router()
     try {
       const [user, token] = await UserService.signUpUser(req.body);
       res
-        .cookie(COOKIE_NAME ?? 'defaultCookie', token, {
+        .cookie(COOKIE_NAME, token, {
           httpOnly: true,
           maxAge: ONE_DAY_IN_MS,
           sameSite: 'none',
@@ -52,15 +52,34 @@ export default Router()
     async (req: Request, res: Response, next: NextFunction) => {
       try {
         const [user, token] = await UserService.signInUser(req.body);
-
+        if (user) {
+          res
+            .cookie(COOKIE_NAME, token, {
+              httpOnly: true,
+              maxAge: ONE_DAY_IN_MS,
+              sameSite: 'none',
+              secure: process.env.NODE_ENV === 'production',
+            })
+            .json(user);
+        }
+      } catch (error) {
+        next(error);
+      }
+    },
+  )
+  .get('/me', authenticate, async (req: Request, res: Response) => {
+    res.json(req.user);
+  })
+  .delete(
+    '/sessions',
+    async (req: Request, res: Response, next: NextFunction) => {
+      try {
         res
-          .cookie(COOKIE_NAME ?? 'defaultCookie', token, {
+          .clearCookie(COOKIE_NAME, {
             httpOnly: true,
-            maxAge: ONE_DAY_IN_MS,
             sameSite: 'none',
-            secure: process.env.NODE_ENV === 'production',
           })
-          .json(user);
+          .json({ success: true, message: 'Sign out successful' });
       } catch (error) {
         next(error);
       }
