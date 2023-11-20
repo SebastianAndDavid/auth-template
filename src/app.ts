@@ -12,17 +12,25 @@ if (!process.env.PORT) {
   process.exit(1);
 }
 
+const PORT: number = parseInt(process.env.PORT as string, 10);
+
 const app: Express = express();
 
 app.use(
   cors({
-    origin: ['http://127.0.0.1:5173'],
+    origin: ['http://localhost:5173'],
+    // origin: ['http://127.0.0.1:5173'],
     credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
   }),
 );
 app.use(express.json());
 app.use(cookieParser());
 
 app.use('/users', usersController);
+
+app.listen(PORT, () => {
+  console.log(`Listening on port ${PORT}`);
+});
 
 export default app;
