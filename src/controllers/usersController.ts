@@ -78,6 +78,7 @@ export default Router()
           .clearCookie(COOKIE_NAME, {
             httpOnly: true,
             sameSite: 'none',
+            secure: process.env.NODE_ENV === 'production',
           })
           .json({ success: true, message: 'Sign out successful' });
       } catch (error) {
