@@ -20,7 +20,7 @@ beforeEach(async () => {
 
 describe('backend author routes', () => {
   const agent = request.agent(app);
-  it.only('#POST creates a new user', async () => {
+  it('#POST creates a new user', async () => {
     const res = await request(app).post('/users').send(mockUser);
     expect(res.status).toBe(200);
   });
