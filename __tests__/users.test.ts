@@ -1,8 +1,10 @@
 import request from 'supertest';
 import app from '../src/app';
 import { createUser } from '../src/types/users.create';
+import { prisma } from '../src/utils/db.server';
+import { truncate } from '../testUtils/truncate';
 
-const mockUser = { email: 'test12@test.com', password: 'test' };
+const mockUser = { email: 'test@test.com', password: 'test' };
 
 async function registerAndLogin(
   mockUser: createUser,
@@ -11,6 +13,10 @@ async function registerAndLogin(
   const res = await agent.post('/users').send(mockUser);
   return res.body;
 }
+
+beforeEach(async () => {
+  await truncate(['Users'], prisma);
+});
 
 describe('backend author routes', () => {
   const agent = request.agent(app);
@@ -29,7 +35,7 @@ describe('backend author routes', () => {
     const res = await agent.post('/users/sessions').send(mockUser);
     expect(res.status).toBe(200);
   });
-  it.only('#DELETE/users/sessions deletes a user session (logs user out)', async () => {
+  it('#DELETE/users/sessions deletes a user session (logs user out)', async () => {
     await registerAndLogin(mockUser, agent);
     const logout = await agent.delete('/users/sessions');
     expect(logout.status).toBe(200);
@@ -38,7 +44,7 @@ describe('backend author routes', () => {
       message: 'Sign out successful',
     });
 
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    // await new Promise((resolve) => setTimeout(resolve, 100));
 
     // const res = await agent.get(`/users/${user.id}`);
     // expect(res.status).toBe(404);
