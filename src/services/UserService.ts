@@ -2,8 +2,8 @@ import { compareSync, hash } from 'bcrypt';
 import { prisma } from '../utils/db.server';
 import { sign } from 'jsonwebtoken';
 import { JWT_SECRET } from '../config';
-import { Users } from '@prisma/client';
 import createHttpError from 'http-errors';
+import { UserSelect } from '../types/user.interfaces';
 
 type User = {
   email: string;
@@ -11,7 +11,10 @@ type User = {
 };
 
 export default class UserService {
-  static async signUpUser({ email, password }: User): Promise<[Users, string]> {
+  static async signUpUser({
+    email,
+    password,
+  }: User): Promise<[UserSelect, string]> {
     const existingUser = await prisma.users.findUnique({
       where: { email },
     });
@@ -19,7 +22,7 @@ export default class UserService {
     const passwordHash = await hash(password, Number(process.env.SALT_ROUNDS));
     const user = await prisma.users.create({
       data: { email, password: passwordHash },
-      select: { id: true, email: true, password: true },
+      select: { id: true, email: true },
     });
 
     const tokenPayLoad = { id: user.id, email: user.email };
